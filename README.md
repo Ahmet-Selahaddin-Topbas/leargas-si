@@ -9,7 +9,7 @@
 ### 001 — Thermal Infrastructure as Settlement Policy
 *Data Centre Waste Heat Recovery as a Response to Ireland's Dual Crisis: Grid Stability and Housing*
 
-→ **[Read whitepaper](https://ahmet-selahaddin-topbas.github.io/leargas-si/)** · EirGrid · SEAI · CRU · IDA Ireland
+→ **[Read analysis](https://ahmet-selahaddin-topbas.github.io/leargas-si/)** · EirGrid · SEAI · CRU · IDA Ireland
 
 ---
 
