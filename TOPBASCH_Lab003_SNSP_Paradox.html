@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Léargas SI · The €700M Paradox — Ireland's SNSP Cap</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-2: #3a3a3a;
+    --ink-3: #777;
+    --ink-4: #bbb;
+    --surface: #f6f5f1;
+    --white: #ffffff;
+    --border: rgba(0,0,0,0.09);
+    --border-strong: rgba(0,0,0,0.16);
+    --teal: #0f6e56;
+    --teal-light: #e1f5ee;
+    --teal-mid: #1d9e75;
+    --amber: #7a4600;
+    --amber-light: #fdf3e3;
+    --red: #8b1a1a;
+    --red-light: #fdf0f0;
+    --mono: 'Courier New', Courier, monospace;
+    --serif: 'Georgia', 'Times New Roman', serif;
+    --ui: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--surface); color: var(--ink); font-family: var(--serif); font-size: 16px; line-height: 1.75; min-height: 100vh; }
+  .top-bar { height: 5px; background: var(--ink); }
+  .page { max-width: 820px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  .masthead { padding: 3.5rem 0 2.5rem; border-bottom: 1.5px solid var(--ink); margin-bottom: 3rem; }
+  .framework-line { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 1.25rem; }
+  .framework-line em { font-style: normal; color: var(--teal); font-weight: bold; }
+  h1 { font-size: clamp(24px, 4.5vw, 38px); font-weight: normal; line-height: 1.2; letter-spacing: -0.015em; margin-bottom: 0.75rem; }
+  .doc-subtitle { font-size: 16px; color: var(--ink-2); font-style: italic; margin-bottom: 2rem; line-height: 1.5; }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 24px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-bottom: 1.25rem; }
+  .meta-grid strong { color: var(--ink); display: block; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1px; }
+  .audience-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem; }
+  .aud-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border: 1px solid var(--border-strong); color: var(--ink-2); }
+
+  .method-box { background: var(--ink); color: #e8e4dc; padding: 1.75rem 2rem; margin: 0 0 3rem; font-family: var(--ui); font-size: 14px; line-height: 1.65; }
+  .method-box h3 { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #9FE1CB; margin-bottom: 0.75rem; font-weight: normal; }
+  .method-box p { color: #c8c4bc; margin-bottom: 0.6rem; }
+  .method-box p:last-child { margin-bottom: 0; }
+  .method-box strong { color: #e8e4dc; }
+
+  .series-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 3rem; }
+  .series-item { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; padding: 4px 12px; border: 1px solid var(--border-strong); color: var(--ink-3); text-decoration: none; }
+  .series-item.active { background: var(--ink); color: #e8e4dc; border-color: var(--ink); }
+  .series-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
+
+  .section { margin-bottom: 3.5rem; }
+  .section-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 0.4rem; }
+  h2 { font-size: 21px; font-weight: normal; letter-spacing: -0.01em; border-bottom: 1px solid var(--border-strong); padding-bottom: 0.5rem; margin-bottom: 1.25rem; }
+  h3 { font-size: 15px; font-weight: bold; font-family: var(--ui); color: var(--ink); margin: 1.75rem 0 0.6rem; }
+  p { margin-bottom: 1rem; font-size: 15.5px; color: var(--ink-2); }
+  p:last-child { margin-bottom: 0; }
+
+  .pullquote { border-left: 4px solid var(--ink); margin: 1.75rem 0; padding: 1rem 1.5rem; background: var(--white); font-size: 16px; color: var(--ink); line-height: 1.65; font-style: italic; }
+  .pullquote em { font-style: normal; font-weight: bold; color: var(--red); }
+
+  .insight { background: var(--ink); color: #ede8e0; padding: 1.5rem 1.75rem; margin: 1.5rem 0; font-size: 15px; line-height: 1.7; font-family: var(--ui); }
+  .insight em { color: #9FE1CB; font-style: normal; font-weight: bold; }
+
+  .data-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-strong); border: 1px solid var(--border-strong); margin: 1.5rem 0; }
+  @media (max-width: 560px) { .data-row { grid-template-columns: 1fr 1fr; } }
+  .data-cell { background: var(--white); padding: 1rem 1.125rem; text-align: center; }
+  .data-num { font-family: var(--mono); font-size: 26px; font-weight: bold; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+  .data-num.red { color: var(--red); }
+  .data-label { font-family: var(--ui); font-size: 11px; color: var(--ink-3); line-height: 1.4; }
+  .data-src { font-family: var(--mono); font-size: 9px; color: var(--ink-4); margin-top: 3px; }
+
+  .lens-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 14px; }
+  .lens-table th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); text-align: left; padding: 6px 0 8px; border-bottom: 1.5px solid var(--ink); }
+  .lens-table td { padding: 12px 16px 12px 0; vertical-align: top; border-bottom: 1px solid var(--border); color: var(--ink-2); line-height: 1.6; font-family: var(--ui); }
+  .lens-table td:first-child { font-family: var(--mono); font-size: 10px; font-weight: bold; color: var(--ink); white-space: nowrap; padding-right: 20px; letter-spacing: 0.08em; text-transform: uppercase; width: 100px; }
+  .lens-table tr:last-child td { border-bottom: none; }
+  .lens-detail { font-size: 12px; color: var(--ink-3); margin-top: 4px; font-style: italic; }
+
+  .rule { height: 1px; background: var(--border-strong); margin: 3rem 0; }
+
+  .model-section { background: var(--white); border: 1.5px solid var(--ink); padding: 2rem; margin: 1.75rem 0 1.25rem; }
+  .model-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin-bottom: 4px; }
+  .model-title { font-size: 16px; font-weight: bold; font-family: var(--ui); color: var(--ink); margin-bottom: 3px; }
+  .model-sub { font-size: 11px; font-family: var(--mono); color: var(--ink-3); margin-bottom: 1rem; }
+
+  .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .badge { font-family: var(--mono); font-size: 10px; letter-spacing: 0.03em; padding: 2px 8px; border: 1px solid; }
+  .badge-v { background: var(--teal-light); color: var(--teal); border-color: var(--teal-mid); }
+  .badge-a { background: var(--amber-light); color: var(--amber); border-color: #d4860a; }
+
+  .controls-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+  @media (max-width: 580px) { .controls-grid { grid-template-columns: 1fr; } }
+  .ctrl-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px; }
+  .ctrl-val { font-family: var(--mono); font-size: 24px; font-weight: bold; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.02em; }
+  .ctrl-range-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; color: var(--ink-4); margin-top: 3px; }
+
+  input[type=range] { width: 100%; height: 3px; -webkit-appearance: none; appearance: none; background: var(--border-strong); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--ink); border-radius: 50%; }
+  input[type=range]::-moz-range-thumb { width: 16px; height: 16px; background: var(--ink); border-radius: 50%; border: none; }
+
+  .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+  @media (max-width: 480px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
+  .metric { padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); }
+  .metric.primary { background: var(--white); border: 1px solid var(--border-strong); }
+  .metric.danger { background: var(--red-light); border: 1px solid rgba(139,26,26,0.2); }
+  .metric-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+  .metric-val { font-family: var(--mono); font-size: 22px; font-weight: bold; color: var(--ink); line-height: 1; margin-bottom: 2px; }
+  .metric-val.red { color: var(--red); }
+  .metric-unit { font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+
+  .chart-section { margin-top: 1.5rem; }
+  .chart-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); text-align: center; margin-bottom: 8px; }
+  .chart-wrap { position: relative; width: 100%; height: 200px; }
+
+  .scenario-box { border: 1px solid var(--border-strong); margin-top: 1.5rem; }
+  .scenario-header { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .scenario-row { display: grid; grid-template-columns: 120px 1fr 1fr; gap: 0; }
+  @media (max-width: 500px) { .scenario-row { grid-template-columns: 1fr; } }
+  .scenario-cell { padding: 10px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); font-family: var(--mono); font-size: 11px; }
+  .scenario-cell:last-child { border-right: none; }
+  .scenario-row:last-child .scenario-cell { border-bottom: none; }
+  .scenario-name { font-weight: bold; color: var(--ink); }
+  .scenario-val { color: var(--red); font-size: 13px; }
+  .scenario-desc { color: var(--ink-3); font-size: 10px; font-family: var(--ui); }
+
+  .assumptions { border: 1px solid var(--border); margin-top: 1.25rem; }
+  .assumptions-header { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding: 8px 12px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .assumption-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 12px; font-family: var(--mono); font-size: 11px; border-bottom: 1px solid var(--border); gap: 1rem; }
+  .assumption-row:last-child { border-bottom: none; }
+  .assumption-key { color: var(--ink-2); flex-shrink: 0; }
+  .assumption-src { color: var(--ink-3); font-size: 10px; text-align: right; }
+
+  .policy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border-strong); border: 1px solid var(--border-strong); margin: 1.25rem 0; }
+  @media (max-width: 500px) { .policy-grid { grid-template-columns: 1fr; } }
+  .policy-cell { background: var(--white); padding: 1rem 1.25rem; }
+  .policy-org { font-family: var(--mono); font-size: 11px; font-weight: bold; color: var(--ink); letter-spacing: 0.06em; margin-bottom: 6px; }
+  .policy-desc { font-size: 13px; color: var(--ink-2); line-height: 1.55; font-family: var(--ui); }
+
+  .scope-box { border: 1px solid var(--border-strong); padding: 1.5rem; margin: 1.25rem 0; background: var(--white); }
+  .scope-box h3 { margin-top: 0; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.75rem; font-weight: normal; }
+  .scope-item { display: flex; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--ink-2); font-family: var(--ui); line-height: 1.5; }
+  .scope-marker { font-family: var(--mono); font-size: 11px; color: var(--ink-4); flex-shrink: 0; padding-top: 2px; }
+
+  .triangle-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-strong); border: 1px solid var(--border-strong); margin: 1.5rem 0; }
+  @media (max-width: 500px) { .triangle-box { grid-template-columns: 1fr; } }
+  .triangle-cell { background: var(--white); padding: 1.25rem; }
+  .triangle-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 6px; }
+  .triangle-title { font-family: var(--ui); font-size: 13px; font-weight: bold; color: var(--ink); margin-bottom: 4px; }
+  .triangle-desc { font-family: var(--ui); font-size: 12px; color: var(--ink-3); line-height: 1.4; }
+  .triangle-cell.active { background: var(--ink); }
+  .triangle-cell.active .triangle-num { color: #9FE1CB; }
+  .triangle-cell.active .triangle-title { color: #e8e4dc; }
+  .triangle-cell.active .triangle-desc { color: #aaa; }
+
+  .bib-list { list-style: none; font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .bib-list li { padding: 7px 0; border-bottom: 1px solid var(--border); line-height: 1.6; }
+  .bib-list li:last-child { border-bottom: none; }
+  .bib-num { color: var(--ink-4); margin-right: 8px; }
+
+  footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1.5px solid var(--ink); font-family: var(--mono); font-size: 11px; color: var(--ink-3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  footer strong { color: var(--ink); }
+
+  @media (max-width: 600px) { .page { padding: 0 1.25rem 4rem; } h1 { font-size: 22px; } }
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+<div class="page">
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="framework-line">
+    <em>Léargas SI</em> · Systems Intelligence Framework · Analytical Whitepaper · v1.0
+  </div>
+  <h1>The €700M Paradox</h1>
+  <p class="doc-subtitle">How Ireland Burns Its Own Wind: System Design Failure Behind the SNSP Cap</p>
+  <div class="meta-grid">
+    <div><strong>Author</strong>Ahmet Selahaddin Topbaş</div>
+    <div><strong>Lab</strong>TOPBASCH Systems Lab</div>
+    <div><strong>Reference</strong>TOPBASCH-BA-003</div>
+    <div><strong>Date</strong>May 2026</div>
+    <div><strong>Document Type</strong>Business Analysis Deliverable</div>
+    <div><strong>Framework</strong>Léargas SI v2</div>
+  </div>
+  <div class="audience-row">
+    <span class="aud-tag">EirGrid</span>
+    <span class="aud-tag">CRU</span>
+    <span class="aud-tag">SEAI</span>
+    <span class="aud-tag">DESNZ</span>
+    <span class="aud-tag">Beyond Fossil Fuels</span>
+  </div>
+</div>
+
+<!-- SERIES NAV -->
+<div class="series-label">Léargas SI · Published Series</div>
+<div class="series-nav">
+  <a class="series-item" href="https://ahmet-selahaddin-topbas.github.io/leargas-si/">001 · Thermal Infrastructure as Settlement Policy</a>
+  <a class="series-item" href="https://ahmet-selahaddin-topbas.github.io/leargas-si/TOPBASCH_Lab002_Hornsea3_BA_Enhanced.html">002 · Stranded Watts — Hornsea 3</a>
+  <span class="series-item active">003 · The €700M Paradox · This document</span>
+</div>
+
+<!-- METHOD BOX -->
+<div class="method-box">
+  <h3>About Léargas SI — methodological note</h3>
+  <p>Léargas SI (Systems Intelligence) is a domain-specific analytical framework built on the foundation of the PESTLE methodology — refining it for energy system analysis. Where PESTLE applies six generic dimensions, Léargas SI replaces the Economic and Environmental lenses with a domain-calibrated <strong>Exergetic lens</strong>: evaluating not just energy quantity but thermodynamic quality, grade, and recovery potential.</p>
+  <p>The six lenses — Technical, Financial, Political, Ecological, Social, Exergetic — retain PESTLE's structural familiarity while enabling analytically precise evaluation of energy infrastructure decisions. This whitepaper is the third published application of Léargas SI v2, following the Ireland Data Centre case (001) and the Hornsea 3 grid connection crisis (002).</p>
+</div>
+
+<!-- SERIES TRIANGLE -->
+<div class="section">
+  <div class="section-num">Series Context</div>
+  <h2>The Léargas SI Triangle</h2>
+  <p>These three case studies are not independent. They map three distinct modes of systemic value destruction in energy infrastructure — and together define a diagnostic triangle for energy transition failure.</p>
+  <div class="triangle-box">
+    <div class="triangle-cell">
+      <div class="triangle-num">001 · Ireland</div>
+      <div class="triangle-title">Value not captured</div>
+      <div class="triangle-desc">Data centre waste heat expelled to atmosphere. Infrastructure misallocation: thermal energy at the wrong address.</div>
+    </div>
+    <div class="triangle-cell">
+      <div class="triangle-num">002 · UK</div>
+      <div class="triangle-title">Value can't enter</div>
+      <div class="triangle-desc">Hornsea 3 wind farm complete, grid connection missing. Physical bottleneck converts ready generation into stranded asset.</div>
+    </div>
+    <div class="triangle-cell active">
+      <div class="triangle-num">003 · Ireland ◀ This paper</div>
+      <div class="triangle-title">Value destroyed by design</div>
+      <div class="triangle-desc">Wind energy generated, system cap reached, turbines switched off while gas plants run. Market design failure at scale.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-num">Section 1</div>
+  <h2>The Paradox</h2>
+
+  <p>Ireland is among the windiest countries in Europe — and among the most aggressive in its renewable electricity targets. The Climate Action Plan mandates 80% renewable electricity by 2030, up from approximately 42% in 2023. The physical resource is not the constraint. The system is.</p>
+
+  <div class="data-row">
+    <div class="data-cell">
+      <div class="data-num red">€700M</div>
+      <div class="data-label">Projected curtailment cost 2025/26</div>
+      <div class="data-src">Modo Energy, 2026 [1]</div>
+    </div>
+    <div class="data-cell">
+      <div class="data-num red">11.3%</div>
+      <div class="data-label">Wind dispatch-down rate, Republic of Ireland, 2025</div>
+      <div class="data-src">EirGrid Annual Report 2025 [2]</div>
+    </div>
+    <div class="data-cell">
+      <div class="data-num">75%</div>
+      <div class="data-label">SNSP limit — share of generation from non-synchronous sources</div>
+      <div class="data-src">EirGrid SNSP Policy [3]</div>
+    </div>
+  </div>
+
+  <p>The System Non-Synchronous Penetration (SNSP) limit defines the maximum share of electricity that can be generated by non-synchronous sources — wind, solar, and HVDC interconnector imports — at any moment. When this ceiling is reached, EirGrid must curtail renewable output and maintain conventional synchronous generators online to provide system inertia.</p>
+
+  <div class="pullquote">
+    In 2024, <em>96% of all curtailment in the Republic of Ireland</em> was caused by the minimum conventional generation requirement — not by transmission constraints, not by excess supply, but by the system's own operating rules forcing fossil fuel generators to run.
+    <br><br>
+    <small style="font-size:13px; font-style:normal; color: var(--ink-3);">Source: EirGrid Annual Renewable Energy Constraint and Curtailment Report 2024 [3]</small>
+  </div>
+
+  <p>This is not a technology failure. Ireland's wind farms are operational. Its grid is connected. The constraint is institutional: a system operating rule — the SNSP cap — is converting available clean energy into waste while simultaneously paying fossil fuel operators to remain online. The cost of this arrangement is projected to reach €700 million in 2025/26.</p>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+  <div class="section-num">Section 2</div>
+  <h2>The Mechanism: Why the Cap Exists and Why It Is Now a Liability</h2>
+
+  <h3>The original rationale</h3>
+  <p>The SNSP limit was designed to protect grid frequency stability. Synchronous generators — gas turbines, large steam units — provide physical inertia: their rotating mass resists frequency deviations. Wind turbines and solar inverters do not share this property. As their share of generation rises, the grid's inherent frequency response degrades, increasing the risk of cascading failure during sudden supply or demand changes.</p>
+
+  <p>When the SNSP cap was introduced and progressively raised to 75%, it represented genuine engineering leadership: Ireland became one of the highest-penetration non-synchronous grids in the world. But the architecture supporting that limit — requiring a minimum number of conventional synchronous units online at all times — was designed for a system with far less renewable capacity than Ireland now operates.</p>
+
+  <h3>Why the architecture is now the problem</h3>
+  <p>EirGrid currently requires a minimum of seven large conventional generators to be online across the island at all times. This minimum generation floor creates a structural floor on fossil fuel dispatch — regardless of renewable availability. When wind output is high and demand is low (typically at night, and increasingly during the day), the system reaches its SNSP ceiling with conventional generators still running at minimum output. Renewables are curtailed to maintain the balance.</p>
+
+  <div class="insight">
+    The paradox is architectural: <em>the safety mechanism designed to enable high renewable penetration is now the binding constraint on further penetration.</em> Ireland has outgrown the operating envelope its own grid rules were designed for — and the rules have not kept pace.
+  </div>
+
+  <h3>The Grid-Forming connection</h3>
+  <p>EirGrid's Grid-Forming (GFM) Strategy — published in 2024 — directly addresses this architecture. Grid-forming inverters can provide synthetic inertia, enabling the SNSP limit to be raised toward 95% without requiring conventional synchronous generators as the stability backstop. The strategy is correctly diagnosed. The implementation timeline is the gap: GFM deployment at the scale required to raise the SNSP limit to 95% is a multi-year infrastructure programme, while curtailment costs compound annually.</p>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+  <div class="section-num">Section 3</div>
+  <h2>Six-Lens Assessment — Léargas SI v2</h2>
+
+  <table class="lens-table">
+    <thead><tr><th>Lens</th><th>Analysis</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Technical</td>
+        <td>
+          The SNSP limit at 75% is a technically sound response to synchronous inertia requirements — but it was calibrated for a system with lower renewable penetration. The pathway to 95% SNSP requires three parallel interventions: grid-forming inverter deployment at scale, reduction in minimum conventional generation requirements (trials underway to reduce from 8 to 7 units, targeting further reductions), and expanded battery storage providing fast frequency response as a substitute for synchronous inertia. Each of these is technically proven; the constraint is deployment pace versus curtailment cost accumulation.
+          <div class="lens-detail">Key variable: GFM inverter procurement and commissioning timeline versus annual €700M curtailment cost trajectory.</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Financial</td>
+        <td>
+          Curtailment costs in Ireland have escalated from approximately €450M in 2024 to a projected €700M in 2025/26 — a 56% increase in one year. Over a five-year horizon at current trajectory, cumulative curtailment costs exceed €3.5 billion. By contrast, the capital cost of grid-forming inverter deployment and the synchronous condenser programme required to raise SNSP to 95% is estimated in the hundreds of millions — a fraction of the curtailment cost it would avoid. The financial case for accelerated GFM deployment is unambiguous on a net present value basis. The barrier is institutional: capital budgets are annual, while curtailment costs accumulate across decades.
+          <div class="lens-detail">Additionally: Ireland's Capacity Remuneration Mechanism cleared at €150,000/MW for 2028/29 delivery — the system is paying for the capacity it simultaneously curtails.</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Political</td>
+        <td>
+          Ireland's Climate Action Plan mandates 80% renewable electricity by 2030. The current curtailment trajectory — reaching 50% of available wind output by 2030 if unaddressed — is arithmetically incompatible with this target. Every percentage point of curtailment reduces the effective contribution of installed renewable capacity, requiring additional capacity to compensate. The political exposure is significant: Ireland risks missing its own legislated climate targets not because it failed to build wind farms, but because it failed to reform the operating rules governing them. The SNSP cap is a regulatory constraint, not a physical one — it can be changed faster than infrastructure can be built.
+        </td>
+      </tr>
+      <tr>
+        <td>Ecological</td>
+        <td>
+          Each GWh of curtailed wind energy is replaced by fossil fuel generation from the minimum generation fleet. In 2025, 11.3% of available wind in the Republic was dispatched down — approximately 2.1 TWh across the island. At a gas plant heat rate and standard emissions factor, this represents several hundred thousand tonnes of avoidable CO₂ annually. Curtailment is not a zero-carbon event: it is a substitution event in which clean generation is replaced by fossil generation. The ecological cost of the SNSP cap is therefore double — lost clean energy and additional emissions from the gas plants kept online to enforce it.
+          <div class="lens-detail">IIEA modelling suggests curtailment could reach 50% of wind output by 2030 at current trajectory, effectively halving the decarbonisation value of Ireland's offshore wind programme. [5]</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Social</td>
+        <td>
+          Curtailment costs are socialised through electricity bills. The Capacity Remuneration Mechanism — which pays conventional generators to remain available, including during curtailment events — will add over €7 billion to Irish energy bills between 2018 and 2037, with the data centre demand surge potentially extending this burden. Irish household electricity bills have already increased by over €600 per year since 2020. The SNSP cap is not an abstract engineering parameter: it is a cost mechanism that transfers wealth from electricity consumers to fossil fuel operators in exchange for inertia that could increasingly be provided by grid-forming inverters and storage.
+        </td>
+      </tr>
+      <tr>
+        <td>Exergetic</td>
+        <td>
+          This is the Léargas SI differentiator. Wind energy at point of curtailment is high-exergy electricity — maximum thermodynamic quality, directly usable without conversion losses. When it is curtailed, its exergetic value is destroyed entirely. The gas generation that replaces it converts chemical exergy (fuel) to electrical exergy at approximately 50% thermal efficiency, destroying the remainder. The net exergetic loss of each curtailment event is therefore: the full electrical exergy of the curtailed wind, plus the exergy destruction of the replacement gas combustion. This is not merely a financial loss — it is a thermodynamic loss that cannot be recovered. Every hour of curtailment under the SNSP cap represents irreversible destruction of high-quality energy that the Irish wind resource took no fuel to produce.
+          <div class="lens-detail">Exergetic framing distinguishes "wasted energy" from "destroyed energy." Curtailment is the latter — it cannot be stored or recovered after the fact.</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECTION 3b — MODEL -->
+<div class="section">
+  <div class="section-num">Section 3b</div>
+  <h2>Cost Quantification — Live Model</h2>
+  <p>The model below calculates the annual and cumulative cost of curtailment under adjustable assumptions. All parameters are sourced and visible. The base case reflects EirGrid's 2025 reported figures.</p>
+
+  <div class="model-section">
+    <div class="model-eyebrow">Interactive simulation · adjust parameters to test sensitivity</div>
+    <div class="model-title">SNSP Curtailment Cost Model — Ireland (All-Island)</div>
+    <div class="model-sub">Léargas SI · Section 3b · TOPBASCH-BA-003 · May 2026</div>
+
+    <div class="badge-row">
+      <span class="badge badge-v">✓ 11.3% wind DD rate 2025 · EirGrid</span>
+      <span class="badge badge-v">✓ ~18.5 TWh wind generated 2025 · EirGrid</span>
+      <span class="badge badge-v">✓ €60/MWh curtailment cost · Modo Energy</span>
+      <span class="badge badge-a">~ Curtailment rate · adjustable</span>
+      <span class="badge badge-a">~ Wind generation · adjustable</span>
+      <span class="badge badge-a">~ Cost per MWh · adjustable</span>
+    </div>
+
+    <div class="controls-grid">
+      <div>
+        <div class="ctrl-label">Wind dispatch-down rate</div>
+        <div class="ctrl-val" id="dd-display">11%</div>
+        <input type="range" min="5" max="30" value="11" step="1" id="dd-slider" aria-label="Dispatch down rate slider">
+        <div class="ctrl-range-labels"><span>5% low</span><span>30% high (NI 2025)</span></div>
+      </div>
+      <div>
+        <div class="ctrl-label">Annual wind generation (TWh)</div>
+        <div class="ctrl-val" id="gen-display">18.5 TWh</div>
+        <input type="range" min="100" max="400" value="185" step="5" id="gen-slider" aria-label="Wind generation slider">
+        <div class="ctrl-range-labels"><span>10 TWh now</span><span>40 TWh 2030 target</span></div>
+      </div>
+      <div>
+        <div class="ctrl-label">Curtailment cost (€/MWh)</div>
+        <div class="ctrl-val" id="cost-display">€60</div>
+        <input type="range" min="40" max="120" value="60" step="5" id="cost-slider" aria-label="Cost per MWh slider">
+        <div class="ctrl-range-labels"><span>€40 low</span><span>€120 high</span></div>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="metric-label">Wind curtailed</div>
+        <div class="metric-val" id="m-twh">—</div>
+        <div class="metric-unit">TWh / year</div>
+      </div>
+      <div class="metric danger">
+        <div class="metric-label">Annual cost</div>
+        <div class="metric-val red" id="m-annual">—</div>
+        <div class="metric-unit">€ million / year</div>
+      </div>
+      <div class="metric danger">
+        <div class="metric-label">5-year cumulative</div>
+        <div class="metric-val red" id="m-5yr">—</div>
+        <div class="metric-unit">€ billion (undiscounted)</div>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="metric-label">Homes equivalent lost</div>
+        <div class="metric-val" id="m-homes">—</div>
+        <div class="metric-unit">at 4,200 kWh/yr (elec. only)</div>
+      </div>
+      <div class="metric primary">
+        <div class="metric-label">CO₂ equivalent</div>
+        <div class="metric-val" id="m-co2">—</div>
+        <div class="metric-unit">kt CO₂ (replaced by gas at 400g/kWh)</div>
+      </div>
+      <div class="metric primary">
+        <div class="metric-label">GFM payback signal</div>
+        <div class="metric-val" id="m-payback">—</div>
+        <div class="metric-unit">yrs to recover €500M GFM capex</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-title">Annual curtailment cost trajectory — current rate vs. 2030 wind target (€M/yr)</div>
+      <div class="chart-wrap">
+        <canvas id="traj-chart" role="img" aria-label="Bar chart showing curtailment cost trajectory from 2024 to 2030">Curtailment cost trajectory rises from approximately €450M in 2024 to over €1 billion by 2030 at current dispatch-down rates with growing wind capacity.</canvas>
+      </div>
+    </div>
+
+    <div class="scenario-box">
+      <div class="scenario-header">Scenario comparison — fixed parameters, three policy paths</div>
+      <div class="scenario-row">
+        <div class="scenario-cell"><span class="scenario-name">Business as usual</span></div>
+        <div class="scenario-cell"><span class="scenario-val" id="s-bau">—</span></div>
+        <div class="scenario-cell"><span class="scenario-desc">SNSP stays at 75%, wind grows to 30 TWh by 2030. Curtailment rate rises to ~20%.</span></div>
+      </div>
+      <div class="scenario-row">
+        <div class="scenario-cell"><span class="scenario-name">GFM accelerated</span></div>
+        <div class="scenario-cell"><span class="scenario-val" id="s-gfm">—</span></div>
+        <div class="scenario-cell"><span class="scenario-desc">SNSP raised to 90% by 2028 via GFM deployment. Curtailment rate falls to ~5%. Wind grows to 30 TWh.</span></div>
+      </div>
+      <div class="scenario-row">
+        <div class="scenario-cell"><span class="scenario-name">Full reform</span></div>
+        <div class="scenario-cell"><span class="scenario-val" id="s-full">—</span></div>
+        <div class="scenario-cell"><span class="scenario-desc">SNSP at 95%, minimum gen floor removed, storage providing inertia. Curtailment approaches 2%. Wind 30 TWh.</span></div>
+      </div>
+    </div>
+
+    <div class="assumptions">
+      <div class="assumptions-header">Assumption transparency — all sources cited</div>
+      <div class="assumption-row"><span class="assumption-key">Wind dispatch-down rate baseline</span><span class="assumption-src">11.3% ROI 2025 · EirGrid Annual Curtailment Report [2]</span></div>
+      <div class="assumption-row"><span class="assumption-key">All-island wind generation 2025</span><span class="assumption-src">~18.5 TWh estimated · EirGrid Wind Stats [3]</span></div>
+      <div class="assumption-row"><span class="assumption-key">Curtailment cost reference</span><span class="assumption-src">€567M actual 2024/25 → €700M projected 2025/26 · Modo Energy [1]</span></div>
+      <div class="assumption-row"><span class="assumption-key">Electricity demand per household</span><span class="assumption-src">4,200 kWh/yr electrical only · SEAI Residential Stats</span></div>
+      <div class="assumption-row"><span class="assumption-key">Gas replacement emissions factor</span><span class="assumption-src">400 g CO₂/kWh · CCGT average · SEAI [4]</span></div>
+      <div class="assumption-row"><span class="assumption-key">GFM capex reference</span><span class="assumption-src">€500M indicative · EirGrid GFM Strategy 2024 [6]</span></div>
+    </div>
+  </div>
+
+  <p style="font-size:13px; color: var(--ink-3); font-family: var(--ui); margin-top: 1rem;"><em>Model boundary:</em> Curtailment costs are estimated from dispatch-down volume and market price references. Actual curtailment payment mechanisms in the Single Electricity Market involve constraint payments, capacity payments, and balancing costs — the model uses a simplified €/MWh proxy. A full regulatory cost model would require SEM dispatch data.</p>
+</div>
+
+<div class="rule"></div>
+
+<!-- SECTION 4 -->
+<div class="section">
+  <div class="section-num">Section 4</div>
+  <h2>The Regulatory Pathway — Three Levers</h2>
+
+  <p>The SNSP paradox is not a physical constraint — it is a regulatory one. The tools to address it exist within current institutional mandates. Three levers are available without new legislation:</p>
+
+  <div class="policy-grid">
+    <div class="policy-cell">
+      <div class="policy-org">Lever 1 · EirGrid</div>
+      <p class="policy-desc">Accelerate Grid-Forming inverter procurement and synchronous condenser deployment. Raise SNSP operational limit from 75% to 85% by 2027 as GFM capacity comes online — as already outlined in the GFM Strategy. Each percentage point increase in the SNSP limit expands the renewable absorption window and directly reduces curtailment hours.</p>
+    </div>
+    <div class="policy-cell">
+      <div class="policy-org">Lever 2 · CRU</div>
+      <p class="policy-desc">Reform the Capacity Remuneration Mechanism to apply derating factors to conventional generators during periods of high renewable availability. Reduce the incentive for fossil generators to remain online when wind could meet demand. The 2028 CRM renewal with the European Commission is the natural policy window — the regulatory framework must be redesigned before that deadline.</p>
+    </div>
+    <div class="policy-cell">
+      <div class="policy-org">Lever 3 · EirGrid / SONI</div>
+      <p class="policy-desc">Reduce the minimum conventional generation requirement from 7 units to 5 — trials for the 7-unit floor are already underway as of April 2024. Each unit removed from the minimum generation floor creates additional headroom for renewable penetration during low-demand periods, directly targeting the 96% of curtailment attributable to this requirement.</p>
+    </div>
+    <div class="policy-cell">
+      <div class="policy-org">Lever 4 · Celtic Interconnector</div>
+      <p class="policy-desc">The 700 MW Ireland–France HVDC interconnector (EirGrid project, operational target 2027) provides an export route for curtailed renewable energy during high-wind periods. Excess wind that would otherwise be dispatched down can instead be exported. The interconnector is also a GFM-adjacent tool: HVDC systems with grid-forming capability contribute to synthetic inertia.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+  <div class="section-num">Section 5</div>
+  <h2>Scope and Limitations</h2>
+  <div class="scope-box">
+    <h3>What this paper claims — and does not claim</h3>
+    <div class="scope-item"><span class="scope-marker">✓</span><span>The annual cost of curtailment under the SNSP cap (€567M actual 2024/25, €700M projected 2025/26) is quantified from verified market sources and represents a structural rather than cyclical cost.</span></div>
+    <div class="scope-item"><span class="scope-marker">✓</span><span>96% of curtailment in Ireland in 2024 was attributable to the minimum conventional generation requirement — not to transmission constraints or SNSP itself. This is a regulatory design feature, not a physical limit.</span></div>
+    <div class="scope-item"><span class="scope-marker">✓</span><span>The financial case for accelerated GFM deployment is positive on a net present value basis at the curtailment cost trajectory observed. This is a tractable conclusion from publicly available figures.</span></div>
+    <div class="scope-item"><span class="scope-marker">○</span><span>This paper does not model the full SEM dispatch mechanism or the precise regulatory structure of curtailment payments. Cost figures are indicative, not tariff-precise.</span></div>
+    <div class="scope-item"><span class="scope-marker">○</span><span>GFM deployment timelines and costs are drawn from EirGrid's published strategy — actual procurement and commissioning paths may differ.</span></div>
+    <div class="scope-item"><span class="scope-marker">○</span><span>The exergetic analysis is conceptual rather than thermodynamically quantified. A full exergy accounting would require hourly dispatch data and fuel composition data for replaced generation.</span></div>
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+  <div class="section-num">Section 6</div>
+  <h2>Recommended Next Step</h2>
+
+  <p>The financial arithmetic is clear: Ireland is spending approximately €700 million per year to enforce an operating rule that was designed to enable renewable penetration but is now limiting it. The GFM Strategy correctly identifies the solution. The gap is urgency — the strategy is calibrated to a multi-year deployment horizon while curtailment costs accumulate annually.</p>
+
+  <p>Three actions within current institutional mandates would begin to close this gap:</p>
+  <p>— CRU to publish a curtailment cost trajectory forecast alongside the 2028 CRM renewal consultation, making the financial exposure of the status quo explicit in the regulatory record<br>
+  — EirGrid to publish a binding SNSP escalation schedule linked to GFM commissioning milestones, creating accountability for the reform timeline<br>
+  — DESNZ and DECC to jointly commission a cross-jurisdictional study on minimum generation floor reduction — the Northern Ireland constraint is distinct from the Republic's and requires coordinated regulatory response</p>
+
+  <div class="insight">
+    Ireland has built one of the world's most ambitious renewable electricity systems. The SNSP paradox is not a technology failure or a resource failure — it is a <em>rules failure.</em> The operating architecture was designed for a system Ireland has already surpassed. The question is not whether to reform it, but how fast the institutional machinery can move relative to the rate at which curtailment costs compound. On current trajectory, every year of delay costs Ireland approximately €700 million — not in future investment, but in energy already generated and already discarded.
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- BIBLIOGRAPHY -->
+<div class="section">
+  <div class="section-num">References</div>
+  <h2>Bibliography</h2>
+  <ul class="bib-list">
+    <li><span class="bib-num">[1]</span> <strong>Modo Energy.</strong> Ireland: A Power Market in Transition for BESS. March 2026. Curtailment costs: €567M 2024/25, €700M projected 2025/26. modoenergy.com</li>
+    <li><span class="bib-num">[2]</span> <strong>Green Collective / EirGrid.</strong> A Year in Review: The Irish Grid in 2025. January 2026. Wind dispatch-down rate ROI 2025: 11.3% (4.7% curtailment + 6.6% constraints). greencollective.io</li>
+    <li><span class="bib-num">[3]</span> <strong>EirGrid.</strong> Annual Renewable Energy Constraint and Curtailment Report 2024. April 2025. SNSP 75% limit; 96% of ROI curtailment from minimum conventional generation requirement. eirgrid.ie</li>
+    <li><span class="bib-num">[4]</span> <strong>SEAI.</strong> Energy in Ireland 2024 Report. Residential electricity demand; emissions factors. seai.ie</li>
+    <li><span class="bib-num">[5]</span> <strong>IIEA / Prof. David Newbery.</strong> Curtailment: The Overlooked Challenge to Meeting Ireland's Renewable Energy Targets. 2023 REthink Energy Lecture. Curtailment could reach 50% by 2030 if SNSP not raised. iiea.com</li>
+    <li><span class="bib-num">[6]</span> <strong>EirGrid.</strong> Grid-Forming Strategy. 2024. GFM deployment roadmap; SNSP escalation to 95% target. eirgridgroup.com</li>
+    <li><span class="bib-num">[7]</span> <strong>Beyond Fossil Fuels.</strong> Ireland's Capacity Market Renewal. March 2026. CRM 2028 renewal; €7B+ household impact 2018–2037; €150,000/MW T-4 auction clearing price. beyondfossilfuels.org</li>
+    <li><span class="bib-num">[8]</span> <strong>Climate Jargon Buster.</strong> Curtailment Explained — 11% of Ireland's Wind Turned Away. March 2026. Minimum generation requirement; SNSP mechanics. climatejargonbuster.ie</li>
+    <li><span class="bib-num">[9]</span> <strong>PV Magazine.</strong> Northern Ireland Doubles Solar Curtailment in 2024. March 2025. NI wind DD rate 25.5% in 2024; solar curtailment doubled year-on-year. pv-magazine.com</li>
+  </ul>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="page" style="padding-top:0;">
+  <footer>
+    <div>
+      <strong>TOPBASCH Systems Lab</strong><br>
+      Léargas SI Analytical Framework v2 · TOPBASCH-BA-003<br>
+      Ahmet Selahaddin Topbaş · ATÜ MIS '29 · May 2026
+    </div>
+    <div style="text-align: right;">
+      Series: 003 of ongoing · github.com/Ahmet-Selahaddin-Topbas/leargas-si<br>
+      Methodology: Léargas SI (PESTLE + Exergetic lens)<br>
+      Model: quantitative, open-parameter, interactive
+    </div>
+  </footer>
+</div>
+
+<script>
+const ELEC_DEMAND = 4200;
+const GFM_CAPEX = 500;
+
+let chart;
+
+function initChart() {
+  chart = new Chart(document.getElementById('traj-chart'), {
+    type: 'bar',
+    data: {
+      labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+      datasets: [
+        {
+          label: 'Business as usual',
+          data: [],
+          backgroundColor: 'rgba(139,26,26,0.7)',
+          borderColor: 'rgba(139,26,26,1)',
+          borderWidth: 1
+        },
+        {
+          label: 'GFM accelerated',
+          data: [],
+          backgroundColor: 'rgba(15,110,86,0.5)',
+          borderColor: 'rgba(15,110,86,1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 10, family: 'Courier New' }, color: '#777' } },
+        tooltip: { callbacks: { label: ctx => ' €' + ctx.parsed.y.toFixed(0) + 'M/yr' } }
+      },
+      scales: {
+        x: { ticks: { font: { size: 10, family: 'Courier New' }, color: '#999' }, grid: { display: false } },
+        y: { ticks: { font: { size: 10, family: 'Courier New' }, color: '#999', callback: v => '€' + v + 'M' }, grid: { color: 'rgba(0,0,0,0.04)' } }
+      }
+    }
+  });
+}
+
+function calc() {
+  const dd = parseInt(document.getElementById('dd-slider').value) / 100;
+  const gen = parseInt(document.getElementById('gen-slider').value) / 10;
+  const costMWh = parseInt(document.getElementById('cost-slider').value);
+
+  document.getElementById('dd-display').textContent = Math.round(dd * 100) + '%';
+  document.getElementById('gen-display').textContent = gen.toFixed(1) + ' TWh';
+  document.getElementById('cost-display').textContent = '€' + costMWh;
+
+  const curtailedTWh = gen * dd;
+  const annualCost = curtailedTWh * costMWh; // TWh x EUR/MWh = EUR million
+  const fiveYr = annualCost * 5 / 1000;
+  const homes = Math.round(curtailedTWh * 1e9 / ELEC_DEMAND); // TWh -> kWh
+  const co2 = Math.round(curtailedTWh * 1000 * 400 / 1000);
+  const payback = (GFM_CAPEX / annualCost).toFixed(1);
+
+  document.getElementById('m-twh').textContent = curtailedTWh.toFixed(1);
+  document.getElementById('m-annual').textContent = '€' + annualCost.toFixed(0) + 'M';
+  document.getElementById('m-5yr').textContent = '€' + fiveYr.toFixed(1) + 'B';
+  document.getElementById('m-homes').textContent = homes.toLocaleString('en-IE');
+  document.getElementById('m-co2').textContent = co2.toLocaleString('en-IE');
+  document.getElementById('m-payback').textContent = payback;
+
+  // Scenarios
+  const bauCost5 = (30 * 0.20 * costMWh * 5 / 1000).toFixed(1);
+  const gfmCost5 = (30 * 0.05 * costMWh * 5 / 1000).toFixed(1);
+  const fullCost5 = (30 * 0.02 * costMWh * 5 / 1000).toFixed(1);
+  document.getElementById('s-bau').textContent = '€' + bauCost5 + 'B over 5 years';
+  document.getElementById('s-gfm').textContent = '€' + gfmCost5 + 'B over 5 years';
+  document.getElementById('s-full').textContent = '€' + fullCost5 + 'B over 5 years';
+
+  // Chart trajectory
+  const bauTraj = [450, 700, 820, 960, 1100, 1250, Math.round(30 * 0.20 * costMWh)];
+  const gfmTraj = [450, 700, 650, 400, 200, 160, Math.round(30 * 0.05 * costMWh)];
+  chart.data.datasets[0].data = bauTraj;
+  chart.data.datasets[1].data = gfmTraj;
+  chart.update('none');
+}
+
+window.addEventListener('load', () => {
+  initChart();
+  calc();
+  ['dd-slider', 'gen-slider', 'cost-slider'].forEach(id =>
+    document.getElementById(id).addEventListener('input', calc)
+  );
+});
+</script>
+</body>
+</html>
